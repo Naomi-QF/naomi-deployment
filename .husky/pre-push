@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" = "master"] || [ "$branch" = "main" ]; then
+  echo "You can not push to master/main directly"
+  exit 1
+fi
