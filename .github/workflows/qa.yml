@@ -21,7 +21,7 @@ jobs:
         run: CI=false npm run build
 
       - name: deploy to netflify
-        run: npm deploy -p --auth {{SECRETS.NETLIFYAUTHTOKEN}} --site {{secrets.NETSITEID}}
+        run: netlify deploy -p --auth ${{SECRETS.NETLIFYAUTHTOKEN}} --site ${{secrets.NETSITEID}}
 
       - name: Test Lint
         run: npm run lint
