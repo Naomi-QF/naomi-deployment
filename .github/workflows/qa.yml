@@ -17,6 +17,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Build
+        run: CI=false npm run build
+
+      - name: deploy to netflify
+        run: npm deploy -p --auth {{SECRETS.NETLIFYAUTHTOKEN}} --site {{secrets.NETSITEID}}
+
       - name: Test Lint
         run: npm run lint
 
@@ -28,16 +34,11 @@ jobs:
 
       # - name: Upload results
       #   run: npm run upload
-  deploy-to-netlify:
-    needs: test-code
-    runs-on: ubuntu-latest
-    name: deploy to netlify
-    steps:
-      - name: Build
-        run: CI=false npm run build
-
-      - name: deploy to netflify
-        run: npm deploy -p --auth {{SECRETS.NETLIFYAUTHTOKEN}} --site {{secrets.NETSITEID}}
+  # deploy-to-netlify:
+  #   needs: test-code
+  #   runs-on: ubuntu-latest
+  #   name: deploy to netlify
+  #   steps:
 
   # create-pr-against-master-job:
   #   needs: test-code
