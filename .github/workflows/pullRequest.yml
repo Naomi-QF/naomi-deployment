@@ -24,7 +24,7 @@ jobs:
         run: npm run test
 
       - name: Build
-        run: npm run build
+        run: CI=false npm run build
 
       - name: Execute Build
         run: cd build && node index.js
