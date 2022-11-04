@@ -45,3 +45,5 @@ jobs:
         uses: Naomi-QF/naomi-deployment@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_BRANCH: '*'
+          BASE_BRANCH: main
