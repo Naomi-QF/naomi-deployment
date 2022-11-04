@@ -3,7 +3,7 @@ name: Pull request to main branch
 on:
   push:
     branches: 
-      - '*'
+      - develop/*
 
 jobs:
   test-code:
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     name: create PR
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@master
         with:
           fetch-depth: '0'
       - run: exit 0
@@ -45,5 +45,5 @@ jobs:
         uses: Naomi-QF/naomi-deployment@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_BRANCH: '*'
+          HEAD_BRANCH: develop/*
           BASE_BRANCH: main
