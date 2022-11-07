@@ -19,6 +19,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Test Lint
+        run: npm run lint
+
+      - name: Test coverage
+        run: npm run test
+
       - name: Set Homepage
         run: npm run setHomepage
 
@@ -28,35 +34,21 @@ jobs:
       - name: deploy to netflify
         run: netlify deploy -p --auth ${{secrets.NETLIFYAUTHTOKEN}} --site ${{secrets.NETSITEID}}
 
-      - name: Test Lint
-        run: npm run lint
+  Create-PR:
+    needs: test-code
+    runs-on: ubuntu-latest
+    name: create PR
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
 
-      - name: Test coverage
-        run: npm run test
+      - name: Get Branch Name
+        id: get-branch
+        uses: ypicard/get-branch-name-github-action@v1
 
-      # - name: Execute Build
-      #   run: cd build && node index.js
-
-      # - name: Upload results
-      #   run: npm run upload
-  # deploy-to-netlify:
-  #   needs: test-code
-  #   runs-on: ubuntu-latest
-  #   name: deploy to netlify
-  #   steps:
-
-  # create-pr-against-master-job:
-  #   needs: test-code
-  #   runs-on: ubuntu-latest
-  #   name: create PR
-  #   steps:
-  #     - uses: actions/checkout@master
-  #       with:
-  #         fetch-depth: '0'
-  #     - run: exit 0
-  #     - name: Create PR
-  #       uses: Naomi-QF/naomi-deployment@main
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         HEAD_BRANCH: develop/*
-  #         BASE_BRANCH: main
+      - name: Create PR
+        run: gh pr create --base main --head ${{ steps.get-branch.outputs.branch }} --title "Pulling ${{ steps.get-branch.outputs.branch }} into main" --body "Automated PR"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
