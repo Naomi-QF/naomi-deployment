@@ -1,0 +1,55 @@
+name: QA deployment
+
+on:
+  push:
+    branches: 
+      - develop/*
+
+jobs:
+  test-code:
+    environment:
+      name: QA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Test Lint
+        run: npm run lint
+
+      - name: Test coverage
+        run: npm run test
+
+      - name: Set Homepage
+        run: npm run setHomepage
+
+      - name: Build
+        run: CI=false npm run build
+
+      - name: deploy to netflify
+        run: netlify deploy -p --auth ${{secrets.NETLIFYAUTHTOKEN}} --site ${{secrets.NETSITEID}}
+
+  Create-PR:
+    needs: test-code
+    runs-on: ubuntu-latest
+    permissions: write-all
+    name: create PR
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Get Branch Name
+        id: get-branch
+        uses: ypicard/get-branch-name-github-action@v1
+
+      - name: Create PR
+        run: gh pr create --base main --head ${{ steps.get-branch.outputs.branch }} --title "Pulling ${{ steps.get-branch.outputs.branch }} into main" --body "Automated PR"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -3,8 +3,9 @@
 
 
 branch="$(git rev-parse --abbrev-ref HEAD)"
+PROTECTED_BRANCHES="^(master|main)"
 
-if [ "$branch" = "master"] || [ "$branch" = "main" ]; then
-  echo "You can not push to master/main directly"
+if [[ "$branch" =~ $PROTECTED_BRANCHES ]]; then
+  echo "You can not commit into master/main branch"
   exit 1
 fi
