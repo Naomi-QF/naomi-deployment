@@ -37,6 +37,7 @@ jobs:
   Create-PR:
     needs: test-code
     runs-on: ubuntu-latest
+    permissions: write-all
     name: create PR
     steps:
       - uses: actions/checkout@v3
