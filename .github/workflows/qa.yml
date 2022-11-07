@@ -19,6 +19,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Set Homepage
+        run: setHomepage
+
       - name: Build
         run: CI=false npm run build
 
